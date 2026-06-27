@@ -1,4 +1,3 @@
-
 <p align="center">
   <img src="assets/icon.png" alt="Frozen RPC" width="120">
 </p>
@@ -18,208 +17,120 @@
   <img src="https://img.shields.io/badge/discord-rpc-5865F2?style=flat-square&logo=discord">
 </p>
 
----
-
-## 📥 Get Frozen RPC
+<br>
 
 <table>
 <tr>
 <td width="50%" align="center">
 
-### ⬇️ Download Release
+### ⬇️ Download
 
-Grab the latest package for your OS:
-
-[**View Releases →**](https://github.com/FrostX2/frosty-rpc/releases)
+[**Releases →**](https://github.com/FrostX2/frosty-rpc/releases)
 
 | OS | Format |
 |----|--------|
 | 🪟 Windows | `.exe` installer |
-| 🐧 Linux | `.AppImage` / `.deb` / `.rpm` / `.pacman` / `.flatpak` |
+| 🐧 Linux | `.AppImage` / `.deb` / `.rpm` / `.pkg.tar.zst` / `.flatpak` |
 | 🍎 macOS | `.dmg` / `.pkg` |
 
 </td>
 <td width="50%" align="center">
 
-### 🔧 Build from Source
+### 🔧 Build
 
 ```bash
 git clone https://github.com/FrostX2/frosty-rpc.git
 cd frosty-rpc
 npm install
-npm run dist:all    # builds for your OS
+./frozen-rpc              # run directly
+npm run dist:all          # build installers
 ```
-
-Installers land in `../installer/`
-
-[**Build Script →**](shell/build-installers.sh)
 
 </td>
 </tr>
 </table>
 
----
+<br>
 
 ## ✨ Features
 
-<table>
-<tr>
-<td width="50%">
+| | | |
+|---|---|---|
+| 🎮 **Local & Inject modes** | 🔐 **OAuth2 login** | 💾 **Preset manager** |
+| Direct IPC or Gateway WS | Token refresh & persistence | Save/load/swap profiles |
+| 📋 **Full RPC fields** | 🔄 **Auto-reconnect** | 📦 **Cross-platform** |
+| Text, images, timestamps, party, secrets, buttons | Exponential backoff, tray indicator | Windows • Linux • macOS |
 
-**🎮 Two Connection Modes**
-- **Local** — IPC via running Discord client
-- **Inject** — Gateway + OAuth2, no client needed
-
-**📋 Full RPC Support**
-- Text, images, timestamps
-- Party, secrets, buttons
-- Instance flag
-
-</td>
-<td width="50%">
-
-**🔐 OAuth2 Login**
-- Authorize with Discord
-- Token refresh & persistence
-- Manage multiple accounts
-
-**🔄 Auto-Reconnect**
-- Exponential backoff
-- Tray status indicator
-- Seamless reconnect
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-**💾 Preset Manager**
-- Save/load presets
-- Full data export/import
-- Quick switching
-
-</td>
-<td width="50%">
-
-**📦 All Formats**
-- Windows NSIS installer
-- Linux: AppImage, DEB, RPM, Pacman, Flatpak
-- macOS: DMG, PKG
-
-</td>
-</tr>
-</table>
-
----
+<br>
 
 ## 🚀 Quick Start
 
-```bash
-# From source
-npm start
 ```
-
-Or use the universal launcher:
-```bash
-./shell/frozen-rpc.sh      # Linux / macOS
-shell\frozen-rpc.bat       # Windows
+./frozen-rpc          # Linux / macOS
+shell\frozen-rpc.bat  # Windows
 ```
-
-> Launcher auto-detects your distro and handles dependencies.
-
----
-
-## 📖 Usage Guide
 
 1. **Settings** → enter your Discord Client ID & Secret
 2. **Accounts** → **Login with Discord** → authorize
-3. **RPC** → fill in presence → choose mode → **Connect**
-4. Minimize to tray — presence keeps running
+3. **RPC** → fill in presence → pick mode → **Connect**
 
-### Mode Comparison
+Minimize to tray — your presence runs in the background.
 
-| Local Mode | Inject Mode |
-|------------|-------------|
-| Requires Discord client | No local client needed |
-| IPC transport | Gateway WebSocket |
-| Just Client ID | OAuth2 token required |
+<br>
 
----
-
-## 📦 Build Your Own
+## 📦 Installers
 
 | Command | Produces |
 |---------|----------|
-| `npm run dist:win` | NSIS installer (`.exe`) |
-| `npm run dist:linux` | AppImage + `.deb` + `.rpm` + `.pacman` |
-| `npm run dist:mac` | DMG + PKG |
-| `npm run dist:flatpak` | Flatpak bundle (`.flatpak`) |
-| `npm run dist:all` | Everything for current OS |
+| `npm run dist:win` | `Frozen-RPC-Setup-*.exe` |
+| `npm run dist:linux` | AppImage, deb, rpm, pkg.tar.zst |
+| `npm run dist:mac` | DMG, PKG |
+| `npm run dist:flatpak` | `.flatpak` bundle |
+| `npm run dist:all` | Everything for your OS |
 
-### Install Format Reference
+| Format | Install |
+|--------|---------|
+| 🪟 `.exe` | Double-click — auto-installs |
+| 🐧 `.AppImage` | `chmod +x && ./Frozen RPC-*.AppImage` |
+| 🐧 `.deb` | `sudo dpkg -i frozen-rpc_*.deb` |
+| 🐧 `.rpm` | `sudo rpm -i frozen-rpc-*.rpm` |
+| 🐧 `.pkg.tar.zst` | `sudo pacman -U frozen-rpc-*.pkg.tar.zst` |
+| 🐧 `.flatpak` | `flatpak --user install frozen-rpc.flatpak` |
+| 🍎 `.dmg` | Drag to Applications |
+| 🍎 `.pkg` | Double-click installer |
 
-| Format | OS | Install Command |
-|--------|----|-----------------|
-| 🪟 **NSIS** | Windows | Double-click `.exe` |
-| 🐧 **AppImage** | Linux | `chmod +x && ./Frozen RPC-*.AppImage` |
-| 🐧 **DEB** | Debian/Ubuntu | `sudo dpkg -i frozen-rpc_*.deb` |
-| 🐧 **RPM** | Fedora/RHEL | `sudo rpm -i frozen-rpc-*.rpm` |
-| 🐧 **Pacman** | Arch | `sudo pacman -U frozen-rpc-*.pkg.tar.zst` |
-| 🐧 **Flatpak** | Any Linux | `flatpak --user install frozen-rpc.flatpak` |
-| 🍎 **DMG** | macOS | Drag to Applications |
-| 🍎 **PKG** | macOS | Double-click installer |
+Output goes to `../installer/`.
 
----
-
-> **Want a specific format?** Run `npm run dist:linux -- --linux AppImage` for just AppImage, or check the [build script](shell/build-installers.sh).
-
----
-
-## 🖥️ Desktop Integration
-
-| OS | File | Install Command |
-|----|------|----------------|
-| 🐧 Linux | `shell/frozen-rpc.desktop` | `bash shell/install/linux-install-desktop.sh` |
-| 🍎 macOS | `shell/Frozen RPC.app` | `bash shell/install/macos-install-app.sh` |
-| 🪟 Windows | `shell/frozen-rpc.bat` | Double-click `shell/install/windows-shortcut.vbs` |
-
----
-
-## 🗄️ Data Storage
-
-| File | What's Inside |
-|------|---------------|
-| `rpc.db` | SQLite — accounts, presets, all config |
-| `config/config.json` | Discord app credentials |
-
-> Export/import everything from the **Accounts** tab.
-
----
+<br>
 
 ## 🛠️ Requirements
 
-- **Node.js** 18+
-- **Discord desktop client** — only needed for Local mode
+- **Node.js 18+**
+- Discord client — only needed for **Local** mode (Inject mode works without it)
 
----
+<br>
 
-## 📁 Project Structure
+## 📁 Structure
 
 ```
 frosty-rpc/
-├── src/              Core application (main process, modules)
-├── renderer/         Frontend (HTML, JS, CSS)
-├── shell/            Launchers, distro scripts, install helpers
-├── assets/           Icons and static assets
+├── src/              Main process & modules
+├── renderer/         UI (HTML, JS, CSS)
+├── shell/            Launchers, distro scripts, helpers
+├── assets/           Icons
 ├── flatpak/          Flatpak manifest
-├── config/           App credentials
-└── package.json      Dependencies & build config
+├── frozen-rpc        Universal launcher
+└── package.json
 ```
 
----
+Data lives in `rpc.db` (SQLite) and `config/config.json`.
+
+<br>
+
+<hr>
 
 <p align="center">
-  <sub>Built with ❤️ using Electron + discord-rpc + better-sqlite3</sub><br>
+  <sub>Built with Electron + discord-rpc + better-sqlite3</sub><br>
   <sub>MIT License · © NotFrost</sub><br>
-  <sub><a href="https://github.com/FrostX2/frosty-rpc/releases">Releases</a> · <a href="https://github.com/FrostX2/frosty-rpc">GitHub</a></sub>
+  <a href="https://github.com/FrostX2/frosty-rpc/releases">Releases</a> · <a href="https://github.com/FrostX2/frosty-rpc">GitHub</a>
 </p>

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -e
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$DIR"
+
+OS="$(uname -s)"
+
+case "$OS" in
+  Darwin|Linux)
+    if [ -x node_modules/.bin/electron ]; then
+      exec node_modules/.bin/electron .
+    elif command -v npm &>/dev/null; then
+      exec npm start
+    else
+      echo "Error: Node.js/npm not found. Install Node.js 18+ first."
+      exit 1
+    fi
+    ;;
+  MINGW*|MSYS*|CYGWIN*)
+    exec npm start
+    ;;
+  *)
+    echo "Unsupported OS: $OS"
+    exit 1
+    ;;
+esac

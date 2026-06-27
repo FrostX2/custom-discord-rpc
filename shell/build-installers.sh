@@ -25,9 +25,9 @@ case "$OS" in
     echo ""
     echo "[3/3] Copying launcher scripts..."
     mkdir -p "$DIR/installer/launcher"
-    cp "$DIR/shell/frozen-rpc.sh" "$DIR/installer/launcher/"
+    cp "$DIR/frozen-rpc" "$DIR/installer/launcher/"
     cp "$DIR/shell/frozen-rpc.desktop" "$DIR/installer/launcher/"
-    cp -r "$DIR/shell/distro" "$DIR/installer/launcher/"
+    cp "$DIR/shell/frozen-rpc.bat" "$DIR/installer/launcher/"
     echo "  → installer/launcher/"
     ;;
 
