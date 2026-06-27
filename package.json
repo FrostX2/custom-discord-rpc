@@ -14,7 +14,13 @@
     "dist:flatpak": "bash flatpak/build.sh",
     "dist:all": "bash build-installers.sh"
   },
-  "keywords": ["discord", "rpc", "rich-presence", "electron", "desktop"],
+  "keywords": [
+    "discord",
+    "rpc",
+    "rich-presence",
+    "electron",
+    "desktop"
+  ],
   "license": "MIT",
   "author": "NotFrost <notfrost@users.noreply.github.com>",
   "dependencies": {
@@ -25,7 +31,7 @@
   },
   "devDependencies": {
     "electron": "^42.0.0",
-    "electron-builder": "^25.0.0"
+    "electron-builder": "^26.15.3"
   },
   "build": {
     "appId": "com.frozenrpc.app",
@@ -44,8 +50,18 @@
     "win": {
       "icon": "assets/icon.png",
       "target": [
-        { "target": "nsis", "arch": ["x64"] },
-        { "target": "msi", "arch": ["x64"] }
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "msi",
+          "arch": [
+            "x64"
+          ]
+        }
       ]
     },
     "nsis": {
@@ -78,7 +94,10 @@
     "mac": {
       "icon": "assets/icon.png",
       "artifactName": "Frozen-RPC-${version}.${ext}",
-      "target": ["dmg", "pkg"],
+      "target": [
+        "dmg",
+        "pkg"
+      ],
       "category": "public.app-category.utilities"
     }
   }

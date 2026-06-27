@@ -4,21 +4,24 @@ import { fileURLToPath } from "url";
 import { readFileSync, existsSync, writeFileSync, mkdirSync } from "fs";
 import { createServer } from "http";
 import { initLogger, logInfo, logWarn, logError, getLogContent, clearLog, getLogPath } from "./logger.js";
-import { initDB, getAccounts, saveAccount, deleteAccount, getPresets, savePreset, deletePreset, exportAllData, importAllData } from "./db.js";
-import { buildAuthURL, exchangeCode, fetchDiscordUser } from "./auth.js";
+import { initDB, getAccounts, getAccountByToken, saveAccount, deleteAccount, getPresets, savePreset, deletePreset, exportAllData, importAllData } from "./db.js";
+import { buildAuthURL, exchangeCode, fetchDiscordUser, refreshToken } from "./auth.js";
 import { startLocalRPC, startGatewayRPC, stopRPC, updateActivity, isConnected, getMode } from "./rpc.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const CONFIG_PATH = join(__dirname, "..", "config", "config.json");
 const ICON_PATH = join(__dirname, "..", "assets", "icon.png");
+
+function getConfigPath() {
+  return join(app.getPath("userData"), "config.json");
+}
 
 let mainWindow = null;
 let tray = null;
 
 function loadAppConfig() {
   try {
-    if (existsSync(CONFIG_PATH)) {
-      const data = JSON.parse(readFileSync(CONFIG_PATH, "utf-8"));
+    if (existsSync(getConfigPath())) {
+      const data = JSON.parse(readFileSync(getConfigPath(), "utf-8"));
       logInfo("App config loaded");
       return data;
     }
@@ -29,9 +32,9 @@ function loadAppConfig() {
 }
 
 function saveAppConfig(cfg) {
-  const dir = join(__dirname, "..", "config");
+  const dir = dirname(getConfigPath());
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-  writeFileSync(CONFIG_PATH, JSON.stringify(cfg, null, 2));
+  writeFileSync(getConfigPath(), JSON.stringify(cfg, null, 2));
   logInfo("App config saved");
 }
 
@@ -216,7 +219,23 @@ ipcMain.handle("start-local-rpc", async (_e, id, config) => {
 ipcMain.handle("start-gateway-rpc", async (_e, token, config) => {
   try {
     logInfo("Starting Gateway RPC...");
-    startGatewayRPC(token, config, (status) => {
+
+    let activeToken = token;
+    const account = getAccountByToken(token);
+    if (account && account.expires_at && Date.now() >= account.expires_at) {
+      logInfo("Token expired, refreshing...");
+      const appCfg = loadAppConfig();
+      const newData = await refreshToken(account, appCfg.clientId, appCfg.clientSecret);
+      activeToken = newData.access_token;
+      saveAccount({
+        ...account,
+        access_token: newData.access_token,
+        refresh_token: newData.refresh_token || account.refresh_token,
+        expires_at: Date.now() + newData.expires_in * 1000,
+      });
+    }
+
+    startGatewayRPC(activeToken, config, (status) => {
       if (mainWindow && !mainWindow.isDestroyed()) {
         mainWindow.webContents.send("rpc-status", status);
       }
@@ -304,7 +323,7 @@ ipcMain.handle("clear-log", () => {
 });
 
 ipcMain.handle("open-log-folder", () => {
-  shell.openPath(join(__dirname, "..", "logs"));
+  shell.openPath(join(app.getPath("userData"), "logs"));
   return { success: true };
 });
 

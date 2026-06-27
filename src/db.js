@@ -1,16 +1,19 @@
 import Database from "better-sqlite3";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { join } from "path";
+import { app } from "electron";
 import { logInfo, logError } from "./logger.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const dbPath = join(__dirname, "..", "rpc.db");
-
 let db;
+let dbPath;
+
+function getDBPath() {
+  if (!dbPath) dbPath = join(app.getPath("userData"), "rpc.db");
+  return dbPath;
+}
 
 export function initDB() {
   try {
-    db = new Database(dbPath);
+    db = new Database(getDBPath());
     db.pragma("journal_mode = WAL");
 
     db.exec(`
@@ -62,6 +65,10 @@ export function getAccounts() {
 
 export function getAccount(id) {
   return getDB().prepare("SELECT * FROM accounts WHERE id = ?").get(id);
+}
+
+export function getAccountByToken(token) {
+  return getDB().prepare("SELECT * FROM accounts WHERE access_token = ?").get(token);
 }
 
 export function saveAccount(account) {
