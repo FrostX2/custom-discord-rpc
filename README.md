@@ -44,6 +44,14 @@ Uses Discord's local IPC. Discord must be running. Enter your Client ID and conn
 
 Uses Discord Gateway with an OAuth2 token. No local client needed. Authorize an account, select it, and connect.
 
+## Shortcuts / Desktop Integration
+
+| OS | File | How to install |
+|----|------|---------------|
+| Linux | `frozen-rpc.desktop` | Run `bash other-distro/linux-install-desktop.sh` |
+| macOS | `Frozen RPC.app` (in `other-distro/`) | Run `bash other-distro/macos-install-app.sh` |
+| Windows | `frozen-rpc.bat` + shortcut | Double-click `other-distro/windows-shortcut.vbs` |
+
 ## Build Distributable
 
 ```bash
