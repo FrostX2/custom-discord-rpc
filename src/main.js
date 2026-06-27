@@ -1,41 +1,42 @@
 import { app, BrowserWindow, ipcMain, Tray, Menu, dialog, shell, nativeImage, net } from "electron";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import { readFileSync, existsSync, writeFileSync, mkdirSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, unlinkSync } from "fs";
 import { createServer } from "http";
 import { initLogger, logInfo, logWarn, logError, getLogContent, clearLog, getLogPath } from "./logger.js";
-import { initDB, getAccounts, getAccountByToken, saveAccount, deleteAccount, getPresets, savePreset, deletePreset, exportAllData, importAllData } from "./db.js";
+import { initDB, getAccounts, getAccountByToken, saveAccount, deleteAccount, getPresets, savePreset, deletePreset, exportAllData, importAllData, getConfig, setConfig } from "./db.js";
 import { buildAuthURL, exchangeCode, fetchDiscordUser, refreshToken } from "./auth.js";
 import { startLocalRPC, startGatewayRPC, stopRPC, updateActivity, isConnected, getMode } from "./rpc.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ICON_PATH = join(__dirname, "..", "assets", "icon.png");
 
-function getConfigPath() {
-  return join(app.getPath("userData"), "config.json");
-}
-
 let mainWindow = null;
 let tray = null;
 
 function loadAppConfig() {
+  const defaults = { clientId: "", clientSecret: "", redirectUri: "http://localhost:53173/callback" };
   try {
-    if (existsSync(getConfigPath())) {
-      const data = JSON.parse(readFileSync(getConfigPath(), "utf-8"));
-      logInfo("App config loaded");
-      return data;
-    }
+    return {
+      clientId: getConfig("clientId") || defaults.clientId,
+      clientSecret: getConfig("clientSecret") || defaults.clientSecret,
+      redirectUri: getConfig("redirectUri") || defaults.redirectUri,
+    };
   } catch (err) {
     logError("loadAppConfig", err);
+    return defaults;
   }
-  return { clientId: "", clientSecret: "", redirectUri: "http://localhost:53173/callback" };
 }
 
 function saveAppConfig(cfg) {
-  const dir = dirname(getConfigPath());
-  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-  writeFileSync(getConfigPath(), JSON.stringify(cfg, null, 2));
-  logInfo("App config saved");
+  try {
+    if (cfg.clientId !== undefined) setConfig("clientId", cfg.clientId);
+    if (cfg.clientSecret !== undefined) setConfig("clientSecret", cfg.clientSecret);
+    if (cfg.redirectUri !== undefined) setConfig("redirectUri", cfg.redirectUri);
+    logInfo("App config saved");
+  } catch (err) {
+    logError("saveAppConfig", err);
+  }
 }
 
 function createTray() {
@@ -88,10 +89,24 @@ function createWindow() {
   });
 }
 
+function migrateOldConfig() {
+  try {
+    const oldPath = join(app.getPath("userData"), "config.json");
+    if (!existsSync(oldPath)) return;
+    const data = JSON.parse(readFileSync(oldPath, "utf-8"));
+    if (data.clientId || data.clientSecret || data.redirectUri) {
+      saveAppConfig(data);
+      logInfo("Config migrated from config.json to database");
+    }
+    unlinkSync(oldPath);
+  } catch {}
+}
+
 app.on("ready", () => {
   initLogger();
   logInfo("App starting...");
   initDB();
+  migrateOldConfig();
   createTray();
   createWindow();
 
