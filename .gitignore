@@ -7,3 +7,6 @@ rpc.db-shm
 rpc.db-wal
 logs/
 dist/
+flatpak/repo/
+flatpak/build-dir/
+flatpak/*.flatpak

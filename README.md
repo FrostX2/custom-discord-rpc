@@ -52,16 +52,26 @@ Uses Discord Gateway with an OAuth2 token. No local client needed. Authorize an 
 | macOS | `Frozen RPC.app` (in `other-distro/`) | Run `bash other-distro/macos-install-app.sh` |
 | Windows | `frozen-rpc.bat` + shortcut | Double-click `other-distro/windows-shortcut.vbs` |
 
-## Build Distributable
+## Build Installers
 
 ```bash
-npm run dist:win        # Windows NSIS (.exe)
-npm run dist:linux      # Linux: AppImage + .deb + .rpm + .pacman
-npm run dist:mac        # macOS DMG
-npm run dist            # All platforms
+npm run dist:win         # Windows NSIS (.exe)
+npm run dist:linux       # Linux: AppImage + .deb + .rpm + .pacman
+npm run dist:mac         # macOS DMG + PKG
+npm run dist:flatpak     # Linux Flatpak (.flatpak)
+npm run dist:all         # All for current OS (via build-installers.sh)
 ```
 
-On Windows, installs to `%APPDATA%\Frozen-RPC` with Start Menu and Desktop shortcuts.
+| Format | OS | Output |
+|--------|----|--------|
+| **NSIS** | Windows | `dist/Frozen-RPC-Setup-*.exe` — installs to `%APPDATA%`, Start Menu + Desktop shortcuts |
+| **AppImage** | Linux | `dist/Frozen RPC-*.AppImage` — portable, double-click to run |
+| **DEB** | Linux (Debian/Ubuntu) | `dist/frozen-rpc_*.deb` — `sudo dpkg -i` |
+| **RPM** | Linux (Fedora/RHEL) | `dist/frozen-rpc-*.rpm` — `sudo rpm -i` |
+| **pacman** | Linux (Arch) | `dist/frozen-rpc-*.pkg.tar.zst` — `sudo pacman -U` |
+| **Flatpak** | Linux (any) | `flatpak/frozen-rpc.flatpak` — `flatpak --user install` |
+| **DMG** | macOS | `dist/Frozen RPC-*.dmg` — drag to Applications |
+| **PKG** | macOS | `dist/Frozen RPC-*.pkg` — double-click installer |
 
 ## Data Storage
 

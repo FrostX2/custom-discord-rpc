@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=Frozen RPC
+Comment=Discord Rich Presence injector
+Exec=frozen-rpc
+Icon=com.frozenrpc.app
+Terminal=false
+Type=Application
+Categories=Network;Utility;
+StartupNotify=true

@@ -7,10 +7,12 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron .",
-    "dist": "electron-builder",
+    "dist": "bash build-installers.sh",
     "dist:win": "electron-builder --win",
     "dist:linux": "electron-builder --linux",
-    "dist:mac": "electron-builder --mac"
+    "dist:mac": "electron-builder --mac",
+    "dist:flatpak": "bash flatpak/build.sh",
+    "dist:all": "bash build-installers.sh"
   },
   "keywords": ["discord", "rpc", "rich-presence", "electron", "desktop"],
   "license": "MIT",
@@ -73,7 +75,7 @@
     },
     "mac": {
       "icon": "img/icon.png",
-      "target": ["dmg"],
+      "target": ["dmg", "pkg"],
       "category": "public.app-category.utilities"
     }
   }
