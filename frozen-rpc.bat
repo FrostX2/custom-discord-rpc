@@ -13,4 +13,5 @@ if not exist "node_modules\" (
   call npm install
 )
 
+echo Starting Frozen RPC...
 npx electron .

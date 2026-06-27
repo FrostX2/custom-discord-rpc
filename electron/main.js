@@ -10,6 +10,7 @@ import { startLocalRPC, startGatewayRPC, stopRPC, updateActivity, isConnected, g
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CONFIG_PATH = join(__dirname, "..", "config", "config.json");
+const ICON_PATH = join(__dirname, "..", "img", "icon.png");
 
 let mainWindow = null;
 let tray = null;
@@ -35,9 +36,9 @@ function saveAppConfig(cfg) {
 }
 
 function createTray() {
-  const icon = nativeImage.createEmpty();
+  const icon = nativeImage.createFromPath(ICON_PATH).resize({ width: 16, height: 16 });
   tray = new Tray(icon);
-  tray.setToolTip("Custom Discord RPC");
+  tray.setToolTip("Frozen RPC");
   updateTrayMenu(false);
 }
 
@@ -63,7 +64,8 @@ function createWindow() {
     width: 580,
     height: 760,
     resizable: false,
-    title: "Frosty RPC",
+    title: "Frozen RPC",
+    icon: ICON_PATH,
     webPreferences: { preload: join(__dirname, "preload.js") },
   });
 

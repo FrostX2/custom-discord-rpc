@@ -1,5 +1,5 @@
 {
-  "name": "frosty-rpc",
+  "name": "frozen-rpc",
   "version": "1.0.0",
   "description": "Cross-platform desktop Discord Rich Presence injector",
   "main": "electron/main.js",

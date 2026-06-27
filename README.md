@@ -1,4 +1,4 @@
-# Frosty RPC
+# Frozen RPC
 
 Cross-platform desktop app for Discord Rich Presence injection with OAuth2, auto-reconnect, and preset management.
 
@@ -41,9 +41,9 @@ Uses Discord Gateway with an OAuth2 token. No local client needed. Authorize an 
 
 ## Launcher Scripts
 
-- `frosty-rpc.sh` — Linux
-- `frosty-rpc.bat` — Windows
-- `frosty-rpc.command` — macOS
+- `frozen-rpc.sh` — Linux
+- `frozen-rpc.bat` — Windows
+- `frozen-rpc.command` — macOS
 
 ## Data Storage
 

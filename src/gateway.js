@@ -105,8 +105,8 @@ export function connectGateway(token, config, statusCallback) {
             token,
             properties: {
               os: process.platform,
-              browser: "frosty-rpc",
-              device: "frosty-rpc",
+              browser: "frozen-rpc",
+              device: "frozen-rpc",
             },
             presence: {
               activities: currentActivity ? [currentActivity] : [],
