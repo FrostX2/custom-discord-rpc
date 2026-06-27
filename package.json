@@ -8,11 +8,19 @@
     "start": "electron .",
     "dev": "electron ."
   },
-  "keywords": ["discord", "rpc", "rich-presence", "electron", "desktop"],
+  "keywords": [
+    "discord",
+    "rpc",
+    "rich-presence",
+    "electron",
+    "desktop"
+  ],
   "license": "MIT",
   "dependencies": {
+    "better-sqlite3": "^12.11.1",
     "discord-rpc": "^4.0.1",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "ws": "^8.21.0"
   },
   "devDependencies": {
     "electron": "^42.0.0"

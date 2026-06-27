@@ -13,128 +13,226 @@
     <div class="status-bar">
       <span class="status-dot" id="statusDot"></span>
       <span id="statusText">Disconnected</span>
+      <span id="modeLabel" class="mode-label"></span>
     </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="rpc">RPC</button>
+    <button class="tab" data-tab="auth">Accounts</button>
+    <button class="tab" data-tab="presets">Presets</button>
+    <button class="tab" data-tab="settings">Settings</button>
   </div>
 
   <div class="scroll-content">
-    <div class="form-group">
-      <label for="clientId">Client ID</label>
-      <input type="text" id="clientId" placeholder="Discord Application Client ID">
+
+    <!-- ═══════ RPC TAB ═══════ -->
+    <div class="tab-content active" id="tab-rpc">
+      <fieldset>
+        <legend>Mode</legend>
+        <div class="mode-select">
+          <label><input type="radio" name="mode" value="local" checked> Local (Discord client)</label>
+          <label><input type="radio" name="mode" value="gateway"> Inject (OAuth2 token)</label>
+        </div>
+      </fieldset>
+
+      <div id="localFields">
+        <div class="form-group">
+          <label for="clientId">Client ID</label>
+          <input type="text" id="clientId" placeholder="Discord Application Client ID">
+        </div>
+      </div>
+
+      <div id="gatewayFields" style="display:none">
+        <div class="form-group">
+          <label for="accountSelect">Select Account</label>
+          <select id="accountSelect"><option value="">No accounts — go to Accounts tab</option></select>
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>Text</legend>
+        <div class="form-group">
+          <label for="details">Details (first line)</label>
+          <input type="text" id="details" placeholder="Playing a game" maxlength="128">
+        </div>
+        <div class="form-group">
+          <label for="state">State (second line)</label>
+          <input type="text" id="state" placeholder="In menu" maxlength="128">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Images</legend>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="largeImageKey">Large Image Key</label>
+            <input type="text" id="largeImageKey" placeholder="logo">
+          </div>
+          <div class="form-group">
+            <label for="largeImageText">Large Image Tooltip</label>
+            <input type="text" id="largeImageText" placeholder="My App">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="smallImageKey">Small Image Key</label>
+            <input type="text" id="smallImageKey" placeholder="icon">
+          </div>
+          <div class="form-group">
+            <label for="smallImageText">Small Image Tooltip</label>
+            <input type="text" id="smallImageText" placeholder="v1.0">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Timestamps</legend>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="startTimestamp">Start Timestamp</label>
+            <input type="datetime-local" id="startTimestamp">
+          </div>
+          <div class="form-group">
+            <label for="endTimestamp">End Timestamp</label>
+            <input type="datetime-local" id="endTimestamp">
+          </div>
+        </div>
+        <div class="checkbox-row">
+          <label><input type="checkbox" id="showTime" checked> Show elapsed time (now)</label>
+          <label><input type="checkbox" id="instance"> Instance</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Party</legend>
+        <div class="form-group">
+          <label for="partyId">Party ID</label>
+          <input type="text" id="partyId" placeholder="party-123">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="partySize">Party Size</label>
+            <input type="number" id="partySize" placeholder="1" min="0">
+          </div>
+          <div class="form-group">
+            <label for="partyMax">Party Max</label>
+            <input type="number" id="partyMax" placeholder="4" min="0">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Secrets</legend>
+        <div class="form-group">
+          <label for="joinSecret">Join Secret</label>
+          <input type="text" id="joinSecret" placeholder="join-secret-abc">
+        </div>
+        <div class="form-group">
+          <label for="spectateSecret">Spectate Secret</label>
+          <input type="text" id="spectateSecret" placeholder="spectate-secret-xyz">
+        </div>
+        <div class="form-group">
+          <label for="matchSecret">Match Secret</label>
+          <input type="text" id="matchSecret" placeholder="match-secret-123">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Buttons (max 2)</legend>
+        <div id="buttonsContainer">
+          <div class="button-row" data-idx="0">
+            <input type="text" class="btn-label" placeholder="Label" maxlength="32">
+            <input type="text" class="btn-url" placeholder="https://...">
+          </div>
+          <div class="button-row" data-idx="1">
+            <input type="text" class="btn-label" placeholder="Label" maxlength="32">
+            <input type="text" class="btn-url" placeholder="https://...">
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button id="connectBtn" class="btn primary">Connect</button>
+        <button id="updateBtn" class="btn secondary" disabled>Update</button>
+        <button id="disconnectBtn" class="btn danger" disabled>Disconnect</button>
+      </div>
     </div>
 
-    <fieldset>
-      <legend>Text</legend>
-      <div class="form-group">
-        <label for="details">Details (first line)</label>
-        <input type="text" id="details" placeholder="Playing a game" maxlength="128">
-      </div>
-      <div class="form-group">
-        <label for="state">State (second line)</label>
-        <input type="text" id="state" placeholder="In menu" maxlength="128">
-      </div>
-    </fieldset>
+    <!-- ═══════ AUTH TAB ═══════ -->
+    <div class="tab-content" id="tab-auth">
+      <fieldset>
+        <legend>Discord OAuth2 Credentials</legend>
+        <div class="form-group">
+          <label for="authClientId">Client ID</label>
+          <input type="text" id="authClientId" placeholder="From Discord Developer Portal">
+        </div>
+        <div class="form-group">
+          <label for="authClientSecret">Client Secret</label>
+          <input type="password" id="authClientSecret" placeholder="From Discord Developer Portal">
+        </div>
+        <div class="form-group">
+          <label for="authRedirectUri">Redirect URI</label>
+          <input type="text" id="authRedirectUri" value="http://localhost:53173/callback">
+        </div>
+        <button id="saveCredentialsBtn" class="btn secondary" style="width:100%">Save Credentials</button>
+      </fieldset>
 
-    <fieldset>
-      <legend>Images</legend>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="largeImageKey">Large Image Key</label>
-          <input type="text" id="largeImageKey" placeholder="logo">
-        </div>
-        <div class="form-group">
-          <label for="largeImageText">Large Image Tooltip</label>
-          <input type="text" id="largeImageText" placeholder="My App">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="smallImageKey">Small Image Key</label>
-          <input type="text" id="smallImageKey" placeholder="icon">
-        </div>
-        <div class="form-group">
-          <label for="smallImageText">Small Image Tooltip</label>
-          <input type="text" id="smallImageText" placeholder="v1.0">
-        </div>
-      </div>
-    </fieldset>
+      <fieldset>
+        <legend>Login</legend>
+        <button id="loginBtn" class="btn primary" style="width:100%" disabled>Login with Discord</button>
+      </fieldset>
 
-    <fieldset>
-      <legend>Timestamps</legend>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="startTimestamp">Start Timestamp</label>
-          <input type="datetime-local" id="startTimestamp">
+      <fieldset>
+        <legend>Authorized Accounts</legend>
+        <div id="accountList">
+          <p class="muted">No accounts authorized yet.</p>
         </div>
-        <div class="form-group">
-          <label for="endTimestamp">End Timestamp</label>
-          <input type="datetime-local" id="endTimestamp">
-        </div>
-      </div>
-      <div class="checkbox-row">
-        <label>
-          <input type="checkbox" id="showTime" checked>
-          Show elapsed time (now)
-        </label>
-        <label>
-          <input type="checkbox" id="instance">
-          Instance (activity instance)
-        </label>
-      </div>
-    </fieldset>
+      </fieldset>
 
-    <fieldset>
-      <legend>Party</legend>
-      <div class="form-group">
-        <label for="partyId">Party ID</label>
-        <input type="text" id="partyId" placeholder="party-123">
-      </div>
-      <div class="form-row">
+      <fieldset>
+        <legend>Export / Import</legend>
+        <div class="actions">
+          <button id="exportBtn" class="btn secondary">Export Data</button>
+          <button id="importBtn" class="btn secondary">Import Data</button>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- ═══════ PRESETS TAB ═══════ -->
+    <div class="tab-content" id="tab-presets">
+      <fieldset>
+        <legend>Save Current Config as Preset</legend>
+        <div class="form-row">
+          <div class="form-group" style="flex:2">
+            <input type="text" id="presetName" placeholder="Preset name">
+          </div>
+          <div class="form-group" style="flex:1">
+            <button id="savePresetBtn" class="btn primary" style="height:100%">Save</button>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Saved Presets</legend>
+        <div id="presetList">
+          <p class="muted">No presets saved yet.</p>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- ═══════ SETTINGS TAB ═══════ -->
+    <div class="tab-content" id="tab-settings">
+      <fieldset>
+        <legend>App Settings</legend>
+        <p class="muted">Data is stored in <code>rpc.db</code> and <code>config/config.json</code>.</p>
         <div class="form-group">
-          <label for="partySize">Party Size</label>
-          <input type="number" id="partySize" placeholder="1" min="0">
+          <label for="settingsClientId">Default Client ID</label>
+          <input type="text" id="settingsClientId" placeholder="For local mode">
         </div>
-        <div class="form-group">
-          <label for="partyMax">Party Max</label>
-          <input type="number" id="partyMax" placeholder="4" min="0">
-        </div>
-      </div>
-    </fieldset>
+      </fieldset>
+    </div>
 
-    <fieldset>
-      <legend>Secrets</legend>
-      <div class="form-group">
-        <label for="joinSecret">Join Secret</label>
-        <input type="text" id="joinSecret" placeholder="join-secret-abc">
-      </div>
-      <div class="form-group">
-        <label for="spectateSecret">Spectate Secret</label>
-        <input type="text" id="spectateSecret" placeholder="spectate-secret-xyz">
-      </div>
-      <div class="form-group">
-        <label for="matchSecret">Match Secret</label>
-        <input type="text" id="matchSecret" placeholder="match-secret-123">
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>Buttons (max 2)</legend>
-      <div id="buttonsContainer">
-        <div class="button-row" data-idx="0">
-          <input type="text" class="btn-label" placeholder="Label" maxlength="32">
-          <input type="text" class="btn-url" placeholder="https://...">
-        </div>
-        <div class="button-row" data-idx="1">
-          <input type="text" class="btn-label" placeholder="Label" maxlength="32">
-          <input type="text" class="btn-url" placeholder="https://...">
-        </div>
-      </div>
-    </fieldset>
-  </div>
-
-  <div class="actions">
-    <button id="connectBtn" class="btn primary">Connect</button>
-    <button id="updateBtn" class="btn secondary" disabled>Update</button>
-    <button id="disconnectBtn" class="btn danger" disabled>Disconnect</button>
   </div>
 </div>
 

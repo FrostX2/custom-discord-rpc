@@ -1,5 +1,7 @@
 {
   "clientId": "your_client_id_here",
+  "clientSecret": "your_client_secret_here",
+  "redirectUri": "http://localhost:53173/callback",
   "details": "Playing a custom game",
   "state": "Exploring the world",
   "largeImageKey": "logo",

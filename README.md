@@ -1,6 +1,16 @@
 # Custom Discord RPC
 
-Cross-platform desktop app to set a fully custom Discord Rich Presence with auto-reconnect.
+Cross-platform desktop app for fully custom Discord Rich Presence with OAuth2 injection, auto-reconnect, and preset management.
+
+## Features
+
+- **Local mode** — sets presence via running Discord client (IPC)
+- **Inject mode** — sets presence via Discord Gateway using OAuth2 (no local client needed)
+- **All RPC fields** — text, images, timestamps, party, secrets, buttons, instance
+- **OAuth2 login** — authorize with Discord to get a token
+- **Auto-reconnect** — exponential backoff on disconnect
+- **Presets** — save/load/config export/import
+- **SQLite DB** (`rpc.db`) — stores accounts, presets, and config
 
 ## Setup
 
@@ -8,27 +18,41 @@ Cross-platform desktop app to set a fully custom Discord Rich Presence with auto
 npm install
 ```
 
+Create a Discord application at https://discord.com/developers/applications and add a redirect URI of `http://localhost:53173/callback`.
+
 ## Usage
 
 ```bash
 npm start
 ```
 
-- Enter your Discord app's **Client ID**
-- Customize every RPC field (text, images, timestamps, party, secrets, buttons)
-- Click **Connect** — the app auto-reconnects if Discord disconnects
-- Minimize to tray — the presence keeps running
+1. **Settings tab** — enter your Client ID/Secret
+2. **Accounts tab** → click **Login with Discord**
+3. **RPC tab** → fill in your presence, choose mode, click **Connect**
+4. Minimize to tray — presence keeps running
 
-## All Custom Fields
+### Local Mode
 
-| Section  | Fields |
-|----------|--------|
-| Text     | details, state |
-| Images   | large image key/tooltip, small image key/tooltip |
-| Time     | start timestamp, end timestamp, elapsed toggle |
-| Party    | party ID, size, max |
-| Secrets  | join, spectate, match |
-| Buttons  | up to 2 buttons with label + URL |
+Uses Discord's local IPC. Discord must be running. Enter your Client ID and connect.
+
+### Inject Mode (OAuth2)
+
+Uses Discord Gateway with an OAuth2 token. No local client needed. Authorize an account, select it, and connect.
+
+## Launcher Scripts
+
+- `run.sh` — Linux
+- `run.bat` — Windows
+- `run.command` — macOS
+
+## Data Storage
+
+| File | Contents |
+|------|----------|
+| `rpc.db` | SQLite — accounts, presets, config |
+| `config/config.json` | App credentials (Client ID/Secret) |
+
+Export/import all data from the Accounts tab.
 
 ## Build
 
@@ -39,4 +63,4 @@ npx electron-builder
 ## Requirements
 
 - Node.js 18+
-- Discord desktop client running
+- Discord desktop client (for local mode only)

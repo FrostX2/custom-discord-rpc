@@ -1,6 +1,13 @@
 import { Client } from "discord-rpc";
+import {
+  connectGateway,
+  disconnectGateway,
+  updateGatewayActivity,
+  isGatewayConnected,
+} from "./gateway.js";
 
-let rpc = null;
+let localRpc = null;
+let mode = null;
 let reconnectTimer = null;
 let reconnectAttempts = 0;
 let clientId = null;
@@ -12,16 +19,13 @@ const INITIAL_RECONNECT_DELAY = 2000;
 
 function buildActivity(config) {
   const activity = {};
-
   if (config.details) activity.details = config.details;
   if (config.state) activity.state = config.state;
-
   if (config.startTimestamp || config.endTimestamp) {
     activity.timestamps = {};
     if (config.startTimestamp) activity.timestamps.start = config.startTimestamp;
     if (config.endTimestamp) activity.timestamps.end = config.endTimestamp;
   }
-
   if (config.largeImageKey || config.largeImageText || config.smallImageKey || config.smallImageText) {
     activity.assets = {};
     if (config.largeImageKey) activity.assets.large_image = config.largeImageKey;
@@ -29,7 +33,6 @@ function buildActivity(config) {
     if (config.smallImageKey) activity.assets.small_image = config.smallImageKey;
     if (config.smallImageText) activity.assets.small_text = config.smallImageText;
   }
-
   if (config.partyId || config.partySize || config.partyMax) {
     activity.party = {};
     if (config.partyId) activity.party.id = config.partyId;
@@ -37,48 +40,35 @@ function buildActivity(config) {
       activity.party.size = [config.partySize || 0, config.partyMax || 0];
     }
   }
-
   if (config.matchSecret || config.joinSecret || config.spectateSecret) {
     activity.secrets = {};
     if (config.matchSecret) activity.secrets.match = config.matchSecret;
     if (config.joinSecret) activity.secrets.join = config.joinSecret;
     if (config.spectateSecret) activity.secrets.spectate = config.spectateSecret;
   }
-
-  if (config.buttons?.length) {
-    activity.buttons = config.buttons;
-  }
-
-  if (config.instance !== undefined) {
-    activity.instance = config.instance;
-  }
-
+  if (config.buttons?.length) activity.buttons = config.buttons;
+  if (config.instance !== undefined) activity.instance = config.instance;
   return activity;
 }
 
-function createClient() {
-  rpc = new Client({ transport: "ipc" });
+function createLocalClient() {
+  localRpc = new Client({ transport: "ipc" });
 
-  rpc.on("ready", () => {
+  localRpc.on("ready", () => {
     reconnectAttempts = 0;
     if (currentConfig) {
-      const activity = buildActivity(currentConfig);
-      rpc.setActivity(activity).catch(() => {});
+      localRpc.setActivity(buildActivity(currentConfig)).catch(() => {});
     }
-    if (onStatusChange) onStatusChange({ connected: true, message: "Connected" });
+    if (onStatusChange) onStatusChange({ connected: true, message: "Connected (local)" });
   });
 
-  rpc.on("disconnected", () => {
-    rpc = null;
-    if (onStatusChange) onStatusChange({ connected: false, message: "Disconnected" });
+  localRpc.on("disconnected", () => {
+    localRpc = null;
+    if (onStatusChange) onStatusChange({ connected: false, message: "Disconnected from Discord" });
     scheduleReconnect();
   });
 
-  rpc.on("error", (err) => {
-    if (onStatusChange) onStatusChange({ connected: false, message: err.message });
-  });
-
-  return rpc;
+  return localRpc;
 }
 
 function scheduleReconnect() {
@@ -97,9 +87,7 @@ function scheduleReconnect() {
 
   reconnectTimer = setTimeout(() => {
     reconnectTimer = null;
-    if (onStatusChange) onStatusChange({ connected: false, message: "Reconnecting..." });
-    createClient();
-    rpc.login({ clientId }).catch(() => {});
+    connect();
   }, delay);
 }
 
@@ -111,25 +99,52 @@ function cancelReconnect() {
   reconnectAttempts = 0;
 }
 
-export function startRPC(id, config, statusCallback) {
-  if (rpc) stopRPC();
+function connect() {
+  cancelReconnect();
 
+  if (mode === "gateway") {
+    if (onStatusChange) onStatusChange({ connected: false, message: "Connecting via Gateway..." });
+    connectGateway(clientId, currentConfig, (status) => {
+      if (status.connected) reconnectAttempts = 0;
+      if (onStatusChange) onStatusChange(status);
+    });
+    return true;
+  }
+
+  createLocalClient();
+  localRpc.login({ clientId }).catch(() => {});
+  return true;
+}
+
+export function startLocalRPC(id, config, statusCallback) {
+  stopRPC();
+  mode = "local";
   clientId = id;
   currentConfig = config;
   onStatusChange = statusCallback || null;
-
   cancelReconnect();
+  return connect();
+}
 
-  createClient();
-  return rpc.login({ clientId });
+export function startGatewayRPC(token, config, statusCallback) {
+  stopRPC();
+  mode = "gateway";
+  clientId = token;
+  currentConfig = config;
+  onStatusChange = statusCallback || null;
+  cancelReconnect();
+  return connect();
 }
 
 export function stopRPC() {
   cancelReconnect();
-  if (rpc) {
-    rpc.destroy();
-    rpc = null;
+  if (mode === "gateway") {
+    disconnectGateway();
+  } else if (localRpc) {
+    localRpc.destroy();
+    localRpc = null;
   }
+  mode = null;
   clientId = null;
   currentConfig = null;
   onStatusChange = null;
@@ -137,16 +152,19 @@ export function stopRPC() {
 
 export function updateActivity(config) {
   currentConfig = config;
-  if (!rpc) return Promise.reject(new Error("RPC not connected"));
-
-  const activity = buildActivity(config);
-  return rpc.setActivity(activity);
+  if (mode === "gateway") {
+    updateGatewayActivity(config);
+    return Promise.resolve();
+  }
+  if (!localRpc) return Promise.reject(new Error("RPC not connected"));
+  return localRpc.setActivity(buildActivity(config));
 }
 
 export function isConnected() {
-  return rpc !== null;
+  if (mode === "gateway") return isGatewayConnected();
+  return localRpc !== null;
 }
 
-export function getReconnectAttempts() {
-  return reconnectAttempts;
+export function getMode() {
+  return mode;
 }
