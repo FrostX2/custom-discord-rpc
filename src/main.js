@@ -66,7 +66,7 @@ function createWindow() {
     resizable: false,
     title: "Frozen RPC",
     icon: ICON_PATH,
-    webPreferences: { preload: join(__dirname, "preload.js") },
+    webPreferences: { preload: join(__dirname, "preload.cjs") },
   });
 
   mainWindow.loadFile(join(__dirname, "..", "renderer", "index.html"));
