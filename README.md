@@ -14,11 +14,26 @@ Cross-platform desktop app for Discord Rich Presence injection with OAuth2, auto
 
 ## Setup
 
+Create a Discord application at https://discord.com/developers/applications and add a redirect URI of `http://localhost:53173/callback`.
+
+### Linux
+
+```bash
+# Install system dependencies (optional — for Electron compatibility)
+bash scripts/install-deps.sh
+
+# Install Node deps and run
+npm install
+bash frozen-rpc.sh
+```
+
+### Windows / macOS
+
 ```bash
 npm install
 ```
 
-Create a Discord application at https://discord.com/developers/applications and add a redirect URI of `http://localhost:53173/callback`.
+Then run `frozen-rpc.bat` (Windows) or `frozen-rpc.command` (macOS).
 
 ## Usage
 
@@ -39,11 +54,16 @@ Uses Discord's local IPC. Discord must be running. Enter your Client ID and conn
 
 Uses Discord Gateway with an OAuth2 token. No local client needed. Authorize an account, select it, and connect.
 
-## Launcher Scripts
+## Build Distributable
 
-- `frozen-rpc.sh` — Linux
-- `frozen-rpc.bat` — Windows
-- `frozen-rpc.command` — macOS
+```bash
+npm run dist:win        # Windows NSIS (.exe)
+npm run dist:linux      # Linux: AppImage + .deb + .rpm + .pacman
+npm run dist:mac        # macOS DMG
+npm run dist            # All platforms
+```
+
+On Windows, installs to `%APPDATA%\Frozen-RPC` with Start Menu and Desktop shortcuts.
 
 ## Data Storage
 
@@ -53,17 +73,6 @@ Uses Discord Gateway with an OAuth2 token. No local client needed. Authorize an 
 | `config/config.json` | App credentials (Client ID/Secret) |
 
 Export/import all data from the Accounts tab.
-
-## Build Installer
-
-```bash
-npm run dist:win     # Windows NSIS installer
-npm run dist:linux   # Linux AppImage + deb
-npm run dist:mac     # macOS DMG
-npm run dist         # All platforms
-```
-
-On Windows, the installer places the app at `%APPDATA%\Frozen-RPC` and auto-creates Start Menu and Desktop shortcuts.
 
 ## Requirements
 

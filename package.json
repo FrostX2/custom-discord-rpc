@@ -62,8 +62,16 @@
     },
     "linux": {
       "icon": "img/icon.png",
-      "target": ["AppImage", "deb"],
-      "category": "Network"
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm",
+        "pacman",
+        "freebsd"
+      ],
+      "category": "Network",
+      "synopsis": "Discord Rich Presence injector",
+      "description": "Cross-platform desktop app for custom Discord Rich Presence with OAuth2 injection."
     },
     "mac": {
       "icon": "img/icon.png",
