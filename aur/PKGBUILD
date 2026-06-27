@@ -9,7 +9,7 @@ url="https://github.com/FrostX2/frosty-rpc"
 license=('MIT')
 depends=('electron' 'nodejs' 'npm')
 makedepends=('git')
-source=("$pkgname::git+$url.git#tag=v$pkgver")
+source=("$pkgname::git+$url.git#tag=v1.0.0-beta-1")
 sha256sums=('SKIP')
 
 prepare() {
