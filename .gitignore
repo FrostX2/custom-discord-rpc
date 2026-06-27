@@ -11,4 +11,3 @@ installer/
 flatpak/repo/
 flatpak/build-dir/
 flatpak/*.flatpak
-aur/
