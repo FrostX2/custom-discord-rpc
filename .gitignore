@@ -3,5 +3,7 @@ node_modules/
 config.json
 config/config.json
 rpc.db
+rpc.db-shm
+rpc.db-wal
 logs/
 dist/
