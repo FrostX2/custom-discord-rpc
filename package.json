@@ -40,13 +40,12 @@
       "config/**/*",
       "package.json"
     ],
+    "artifactName": "Frozen-RPC-${version}.${ext}",
     "win": {
       "icon": "assets/icon.png",
       "target": [
-        {
-          "target": "nsis",
-          "arch": ["x64"]
-        }
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "msi", "arch": ["x64"] }
       ]
     },
     "nsis": {
@@ -61,6 +60,7 @@
     },
     "linux": {
       "icon": "assets/icon.png",
+      "artifactName": "Frozen-RPC-${version}.${ext}",
       "target": [
         "AppImage",
         "deb",
@@ -74,6 +74,7 @@
     },
     "mac": {
       "icon": "assets/icon.png",
+      "artifactName": "Frozen-RPC-${version}.${ext}",
       "target": ["dmg", "pkg"],
       "category": "public.app-category.utilities"
     }
