@@ -1,0 +1,16 @@
+{
+  "clientId": "your_client_id_here",
+  "details": "Playing a custom game",
+  "state": "Exploring the world",
+  "showTime": true,
+  "largeImageKey": "logo",
+  "largeImageText": "My Custom App",
+  "smallImageKey": "icon",
+  "smallImageText": "Version 1.0",
+  "buttons": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/FrostX2/custom-discord-rpc"
+    }
+  ]
+}

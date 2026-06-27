@@ -1,0 +1,16 @@
+{
+  "name": "custom-discord-rpc",
+  "version": "1.0.0",
+  "description": "Cross-platform custom Discord Rich Presence application",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "keywords": ["discord", "rpc", "rich-presence"],
+  "license": "MIT",
+  "dependencies": {
+    "discord-rpc": "^4.0.1",
+    "dotenv": "^16.4.7"
+  }
+}
