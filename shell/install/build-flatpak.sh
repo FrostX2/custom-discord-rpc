@@ -26,13 +26,10 @@ flatpak install -y flathub org.freedesktop.Sdk//24.08 2>/dev/null || true
 cd "$DIR/flatpak"
 
 # Build
-flatpak-builder --force-clean --ccache --user build-dir com.frozenrpc.app.yml
+flatpak-builder --force-clean --ccache build-dir com.frozenrpc.app.yml
 
 # Export to repo
 flatpak build-export repo build-dir
-
-# Install locally
-flatpak --user install -y --bundle repo 2>/dev/null || flatpak --user install -y repo com.frozenrpc.app
 
 # Bundle into a single-file Flatpak
 flatpak build-bundle repo "frozen-rpc.flatpak" com.frozenrpc.app

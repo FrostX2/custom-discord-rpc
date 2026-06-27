@@ -1,9 +1,10 @@
 app-id: com.frozenrpc.app
-runtime: org.electronjs.Electron2.BaseApp
+base: org.electronjs.Electron2.BaseApp
+base-version: '24.08'
+runtime: org.freedesktop.Platform
 runtime-version: '24.08'
 sdk: org.freedesktop.Sdk//24.08
 command: frozen-rpc
-separate-locales: false
 finish-args:
   - --share=ipc
   - --socket=x11
@@ -11,21 +12,25 @@ finish-args:
   - --share=network
   - --device=dri
   - --filesystem=home
+  - --no-talk-name=org.freedesktop.Notifications
 modules:
   - name: frozen-rpc
     buildsystem: simple
     build-commands:
       - cp -r * /app/
+      - mkdir -p /app/bin
+      - ln -sf /app/flatpak/frozen-rpc.sh /app/bin/frozen-rpc
+      - chmod +x /app/flatpak/frozen-rpc.sh
     sources:
       - type: dir
         path: ..
         dest: .
         skip:
-          - node_modules
           - dist
           - .git
-          - flatpak
     post-install:
-      - install -Dm644 /app/assets/icon.png /app/share/icons/hicolor/1000x1000/apps/com.frozenrpc.app.png
+      - install -Dm644 /app/assets/icon.png /app/share/icons/hicolor/512x512/apps/com.frozenrpc.app.png
+      - install -Dm644 /app/assets/icon.png /app/share/icons/hicolor/256x256/apps/com.frozenrpc.app.png
+      - install -Dm644 /app/assets/icon.png /app/share/icons/hicolor/128x128/apps/com.frozenrpc.app.png
       - install -Dm644 /app/flatpak/com.frozenrpc.app.desktop /app/share/applications/com.frozenrpc.app.desktop
       - install -Dm644 /app/flatpak/com.frozenrpc.app.appdata.xml /app/share/appdata/com.frozenrpc.app.appdata.xml
