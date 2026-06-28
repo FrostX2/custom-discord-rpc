@@ -7,12 +7,12 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron .",
-    "dist": "bash build-installers.sh",
+    "dist": "bash shell/build-installers.sh",
     "dist:win": "electron-builder --win",
     "dist:linux": "electron-builder --linux",
     "dist:mac": "electron-builder --mac",
     "dist:flatpak": "bash flatpak/build.sh",
-    "dist:all": "bash build-installers.sh"
+    "dist:all": "bash shell/build-installers.sh"
   },
   "keywords": [
     "discord",

@@ -117,23 +117,30 @@ Output goes to `../installer/`.
 
 ```
 frozen-rpc/
-├── src/              Main process & modules
-├── renderer/         UI (HTML, JS, CSS)
-├── shell/            Launchers, distro scripts, helpers
-├── assets/           Icons
-├── flatpak/          Flatpak manifest
-├── frozen-rpc        Universal launcher
+├── src/               Main process & modules
+├── renderer/          UI (HTML, JS, CSS)
+├── shell/             Launchers, distro scripts, helpers
+├── assets/            Icons
+├── flatpak/           Flatpak manifest
+├── scripts/           Helper scripts (install-deps)
+├── config/            App configuration
+├── aur/               AUR package files
+├── dist/              Build artifacts
+├── logs/              Runtime logs
+├── frozen-rpc         Universal launcher
+├── config.example.json
+├── release-notes.md
 └── package.json
 ```
 
-Data lives in `rpc.db` (SQLite) at your OS user data directory.
+Data lives in `app-data.json` and `profiles/*.json` at your OS user data directory.
 
 <br>
 
 <hr>
 
 <p align="center">
-  <sub>Built with Electron + discord-rpc + better-sqlite3</sub><br>
+  <sub>Built with Electron + discord-rpc</sub><br>
   <sub>MIT License · © NotFrost</sub><br>
   <a href="https://github.com/FrostX2/frozen-rpc/releases">Releases</a> · <a href="https://github.com/FrostX2/frozen-rpc">GitHub</a>
 </p>
